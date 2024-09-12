@@ -1,5 +1,5 @@
 import { baseUrl, getPosts, getPostsCategories } from "../../utils/shared.js"
-import { addParamToUrl, getFromLocalStorage } from "../../utils/utils.js"
+import { addParamToUrl, getFromLocalStorage, calcTimeFormat } from "../../utils/utils.js"
 
 const generatePosts = async (posts) => {
      const postContainer = document.querySelector('#posts-container')
@@ -8,7 +8,7 @@ const generatePosts = async (posts) => {
      if (posts.length) {
           postContainer.innerHTML = ''
           posts.forEach(post => {
-               console.log(post);
+               const date = calcTimeFormat(post.createdAt)
                postContainer.insertAdjacentHTML('beforeend', `
                     <div class="col-4">
               <a href="./post.html" class="product-card">
@@ -25,7 +25,7 @@ const generatePosts = async (posts) => {
                          : post.price.toLocaleString() + " تومان"
                     }
                     </span>
-                    <span class="product-card__time">Date</span>
+                    <span class="product-card__time">${date}</span>
                   </div>
                 </div>
                 <div class="product-card__left">
