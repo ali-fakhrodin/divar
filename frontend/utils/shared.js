@@ -9,7 +9,7 @@ const getAllCities = async () => {
 
 const getAndShowSocials = async () => {
      const socialMediaContainer = document.querySelector('#footer__social-media')
-     const res = await axios({url: `${baseUrl}/v1/social`})
+     const res = await axios({ url: `${baseUrl}/v1/social` })
      const socials = await res.data.data.socials
 
      socials.forEach(social => {
@@ -19,16 +19,23 @@ const getAndShowSocials = async () => {
                     </a>
                `)
      });
-     
+
      return socials
 }
 
 const getPosts = async (citiesIDs) => {
      const url = `${baseUrl}/v1/post/?city=${citiesIDs}`
-     const res = await axios({url: url})
+     const res = await axios({ url: url })
      const posts = await res.data.data
 
      return posts
+}
+
+const getPostsCategories = async () => {
+     const res = await axios({ url: `${baseUrl}/v1/category` })
+     const categories = res.data.data.categories
+
+     return categories
 }
 
 export {
@@ -36,4 +43,5 @@ export {
      getAllCities,
      getAndShowSocials,
      getPosts,
+     getPostsCategories,
 }

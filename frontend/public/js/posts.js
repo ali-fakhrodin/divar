@@ -1,8 +1,10 @@
-import { baseUrl, getPosts } from "../../utils/shared.js"
-import { getFromLocalStorage } from "../../utils/utils.js"
+import { baseUrl, getPosts, getPostsCategories } from "../../utils/shared.js"
+import { addParamToUrl, getFromLocalStorage } from "../../utils/utils.js"
 
-const generatePosts = (posts) => {
+const generatePosts = async (posts) => {
      const postContainer = document.querySelector('#posts-container')
+     const categoriesContainer = document.querySelector('#categories-container')
+
      if (posts.length) {
           postContainer.innerHTML = ''
           posts.forEach(post => {
@@ -49,6 +51,23 @@ const generatePosts = (posts) => {
      } else {
           postContainer.innerHTML = '<p class="empty">آگهی یافت نشد!</p>'
      }
+
+     const postCategories = await getPostsCategories()
+
+     categoriesContainer.innerHTML = ''
+     postCategories.forEach(cat => {
+          categoriesContainer.insertAdjacentHTML('beforeend', `
+               <div class="sidebar__category-link" id="category-${cat._id}">
+                    <div class="sidebar__category-link_details" onclick="categoryClickHandler('${cat._id}')">
+                         <i class="sidebar__category-icon bi bi-house"></i>
+                         <p>${cat.title}</p>
+                    </div>
+                </div>
+          `)
+     })
+}
+window.categoryClickHandler = (catID) => {
+     addParamToUrl('categoryID', catID)
 }
 
 window.addEventListener('load', async () => {
@@ -56,8 +75,7 @@ window.addEventListener('load', async () => {
      const cityID = Number(JSON.parse(cities)[0].id)
 
      const allPostsDatas = await getPosts(cityID)
-     console.log(cityID);
-     console.log(allPostsDatas.posts);
+     // console.log(allPostsDatas.posts);
 
      generatePosts(allPostsDatas.posts)
 })
