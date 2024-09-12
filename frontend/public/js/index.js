@@ -1,22 +1,57 @@
 import { getAllCities } from "../../utils/shared.js";
 
-window.addEventListener("load", () => {
-     const loadingContainer = document.querySelector('#loading-container')
-     
-     getAllCities().then((response) => {
-          loadingContainer.style.display = 'none'
-          const popularCitiesContainer = document.querySelector("#popular-cities");
-          const popularCities = response.data.cities.filter((city) => city.popular);
+const cityClickHandler = (cityName, cityID) => {
+     console.log(cityName);
+     console.log(cityID);
+     location.href = './pages/post.html'
+}
+
+window.cityClickHandler = cityClickHandler
+
+window.addEventListener("load", async () => {
+     const citiesResponse = await getAllCities()
+     const cities = await citiesResponse.data.cities
+     const popularCitiesContainer = document.querySelector("#popular-cities");
+     const searchInp = document.querySelector('#search-input')
+     const searchResultWrapper = document.querySelector('.search-result-cities')
+
+
+     // ُSearch
+     searchInp.addEventListener('keyup', e => {
+          searchResultWrapper.innerHTML = ''
+          const searchValue = e.target.value
+          const searchFilteredCities = cities.filter(city => city.name.startsWith(searchValue))
+          searchResultWrapper.classList.add('active')
+
+          if (!searchValue.length) {
+               searchResultWrapper.classList.remove('active')
+               return true
+          }
+
+          if (searchFilteredCities.length) {
+               searchFilteredCities.forEach(city => {
+                    searchResultWrapper.insertAdjacentHTML('beforeend', `
+                         <li>${city.name}</li>
+                    `)
+               })
+          } else {
+               searchResultWrapper.insertAdjacentHTML('beforeend', `
+                    <li>نتیجه ای پیدا نشد!</li>
+               `)
+          }
+     })
+
+     // Popular Cities
+     const popularCities = cities.filter(city => city.popular);
+
+     popularCities.forEach((city) => {
+          // console.log(city);
           
-          popularCities.forEach((city) => {
-               popularCitiesContainer.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                    <li class="main__cities-item">
-                         <p class="main__cities-link">${city.name}</p>
-                    </li>
-                    `
-               );
-          });
+          popularCitiesContainer.insertAdjacentHTML(
+               "beforeend",
+               `<li class="main__cities-item" onclick="cityClickHandler('${city.name}', '${city.id}')">
+                    <p class="main__cities-link">${city.name}</p>
+               </li>`
+          );
      });
 });
