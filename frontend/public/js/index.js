@@ -1,9 +1,10 @@
 import { getAllCities } from "../../utils/shared.js";
+import { saveInLocalStorage } from "../../utils/utils.js";
 
 const cityClickHandler = (cityName, cityID) => {
-     console.log(cityName);
-     console.log(cityID);
-     location.href = './pages/post.html'
+     location.href = './pages/posts.html'
+
+     saveInLocalStorage('cities', [{ name: cityName, id: cityID }])
 }
 
 window.cityClickHandler = cityClickHandler
@@ -14,7 +15,6 @@ window.addEventListener("load", async () => {
      const popularCitiesContainer = document.querySelector("#popular-cities");
      const searchInp = document.querySelector('#search-input')
      const searchResultWrapper = document.querySelector('.search-result-cities')
-
 
      // ُSearch
      searchInp.addEventListener('keyup', e => {
@@ -31,7 +31,7 @@ window.addEventListener("load", async () => {
           if (searchFilteredCities.length) {
                searchFilteredCities.forEach(city => {
                     searchResultWrapper.insertAdjacentHTML('beforeend', `
-                         <li>${city.name}</li>
+                         <li onclick="cityClickHandler('${city.name}', '${city.id}')">${city.name}</li>
                     `)
                })
           } else {
@@ -41,12 +41,14 @@ window.addEventListener("load", async () => {
           }
      })
 
+     searchInp.addEventListener('blur', () => {
+          searchResultWrapper.classList.remove('active')
+     })
+
      // Popular Cities
      const popularCities = cities.filter(city => city.popular);
 
      popularCities.forEach((city) => {
-          // console.log(city);
-          
           popularCitiesContainer.insertAdjacentHTML(
                "beforeend",
                `<li class="main__cities-item" onclick="cityClickHandler('${city.name}', '${city.id}')">

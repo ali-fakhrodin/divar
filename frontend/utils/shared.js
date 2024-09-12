@@ -22,8 +22,18 @@ const getAndShowSocials = async () => {
      
      return socials
 }
+
+const getPosts = async (citiesIDs) => {
+     const url = `${baseUrl}/v1/post/?city=${citiesIDs}`
+     const res = await axios({url: url})
+     const posts = await res.data.data
+
+     return posts
+}
+
 export {
      baseUrl,
      getAllCities,
      getAndShowSocials,
+     getPosts,
 }
