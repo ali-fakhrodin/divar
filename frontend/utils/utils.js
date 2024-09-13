@@ -14,6 +14,21 @@ const addParamToUrl = (param, value) => {
      location.href = url.toString()
 }
 
+const getURLParam = param => {
+     const urlParams = new URLSearchParams(location.search)
+
+     return urlParams.get(param)
+}
+
+const removeParamFromURL = (param) => {
+     const url = new URL(location.href)
+     url.searchParams.delete(param)
+     window.history.replaceState(null, null, url)
+     console.log(url);
+     location.reload()
+     
+}
+
 const calcTimeFormat = (createdAt) => {
      const currentTime = new Date()
      const createdTime = new Date(createdAt)
@@ -34,4 +49,6 @@ export {
      getFromLocalStorage,
      addParamToUrl,
      calcTimeFormat,
+     getURLParam,
+     removeParamFromURL,
 }
