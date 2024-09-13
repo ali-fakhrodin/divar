@@ -1,3 +1,5 @@
+import { getURLParam } from "./utils.js"
+
 const baseUrl = "https://divarapi.liara.run"
 
 const getAllCities = async () => {
@@ -24,7 +26,13 @@ const getAndShowSocials = async () => {
 }
 
 const getPosts = async (citiesIDs) => {
-     const url = `${baseUrl}/v1/post/?city=${citiesIDs}`
+     const catID = getURLParam("categoryID")
+     let url = `${baseUrl}/v1/post/?city=${citiesIDs}`
+
+     if (catID) {
+          url += `&categoryId=${catID}`
+     }
+
      const res = await axios({ url: url })
      const posts = await res.data.data
 

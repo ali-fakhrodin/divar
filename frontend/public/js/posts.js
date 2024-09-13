@@ -95,7 +95,7 @@ const generatePosts = async (posts) => {
                            <i class="bi bi-arrow-right"></i>
                          </div>
                          <div class="sidebar__category-link active-category" href="#">
-                              <div class="sidebar__category-link_details">
+                              <div class="sidebar__category-link_details" onclick="categoryClickHandler('${subSubCategoryParent._id}')">
                                    <i class="sidebar__category-icon bi bi-house"></i>
                                    <p>${subSubCategoryParent.title}</p>
                               </div>
