@@ -26,7 +26,6 @@ const removeParamFromURL = (param) => {
      window.history.replaceState(null, null, url)
      console.log(url);
      location.reload()
-     
 }
 
 const calcTimeFormat = (createdAt) => {

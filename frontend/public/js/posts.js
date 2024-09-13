@@ -65,6 +65,8 @@ const generatePosts = async (posts) => {
           if (!catInfos.length) {
                const subCategory = findSubcategoryByID(categories, categoryID)
 
+               subCategory?.filters.forEach(filter => filterGenerator(filter))
+
                if (subCategory) {
                     categoriesContainer.insertAdjacentHTML('beforeend', `
                     <div class="all-categories">
@@ -82,7 +84,26 @@ const generatePosts = async (posts) => {
                     </div>
                          `)
                } else {
+                    const subSubCategory = findSubSubcategoryByID(categories, categoryID)
+                    const subSubCategoryParent = findSubcategoryByID(categories, subSubCategory.parent)
 
+                    subSubCategory?.filters.forEach(filter => filterGenerator(filter))
+
+                    categoriesContainer.insertAdjacentHTML('beforeend', `
+                         <div class="all-categories" onclick="backToAllCategories()">
+                           <p>همه اگهی ها</p>
+                           <i class="bi bi-arrow-right"></i>
+                         </div>
+                         <div class="sidebar__category-link active-category" href="#">
+                              <div class="sidebar__category-link_details">
+                                   <i class="sidebar__category-icon bi bi-house"></i>
+                                   <p>${subSubCategoryParent.title}</p>
+                              </div>
+                              <ul class="subCategory-list">
+                                   ${subSubCategoryParent.subCategories.map(createSubCategoryHtml).join("")}
+                              </ul>
+                         </div>
+                    `)
                }
 
           } else {
@@ -125,6 +146,65 @@ const findSubcategoryByID = (categories, categoryID) => {
      return allSubCategories.find(sub => sub._id === categoryID)
 }
 
+const findSubSubcategoryByID = (categories, categoryID) => {
+     const allSubCategories = categories.flatMap(category => category.subCategories)
+     const allSubSubCategories = allSubCategories.flatMap(category => category.subCategories)
+
+     return allSubSubCategories.find(sub => sub._id === categoryID)
+}
+
+const filterGenerator = (filter) => {
+     const sidebarFiltersContainer = document.querySelector('#sidebar-filters')
+
+     sidebarFiltersContainer.insertAdjacentHTML("beforebegin", `
+                 ${filter.type === "selectbox" ? `
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-${filter.slug}"
+                        aria-expanded="false"
+                        aria-controls="accordion-${filter.name}">
+                        <span class="sidebar__filter-title">${filter.name}</span>
+                    </button>
+                    </h2>
+                    <div
+                      id="accordion-${filter.slug}"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="accordion-${filter.name}"
+                      data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                        <select class="selectbox">
+                          ${filter.options
+                    .sort((a, b) => b - a)
+                    .map((option) => `<option value='${option}'>${option}</option>`)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `
+               : ""
+          }
+
+        ${filter.type === "checkbox"
+               ? `
+                <div class="sidebar__filter">
+                  <label class="switch">
+                    <input id="exchange_controll" class="icon-controll" type="checkbox" />
+                    <span class="slider round"></span>
+                  </label>
+                  <p>${filter.name}</p>
+                </div>
+              `
+               : ""
+          }
+      `)
+}
+
 const createSubCategoryHtml = (subCategory) => {
      return `
        <li class="${categoryID === subCategory._id ? "active-subCategory" : ""}" onclick="categoryClickHandler('${subCategory._id}')">
@@ -143,9 +223,30 @@ window.backToAllCategories = () => {
 
 window.addEventListener('load', async () => {
      const cities = getFromLocalStorage('cities')
+     const searchValue = getURLParam('value')
      const cityID = Number(JSON.parse(cities)[0].id)
-
      const allPostsDatas = await getPosts(cityID)
 
      generatePosts(allPostsDatas.posts)
+
+
+     // Global Search
+     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
+     const searchInp = document.querySelector('#global_search_input')
+
+     searchInp.addEventListener('keyup', () => {
+          if (searchInp.value) {
+               removeSearchValueIcon.style.display = 'block'
+          } else {
+               removeSearchValueIcon.style.display = 'none'
+          }
+     })
+     removeSearchValueIcon.addEventListener('click', () => {
+          removeParamFromURL('value')
+          searchInp.value = ''
+     })
+     if (searchValue) {
+          removeSearchValueIcon.style.display = 'block'
+          searchInp.value = searchValue
+     }
 })
