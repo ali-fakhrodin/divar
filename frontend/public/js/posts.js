@@ -2,6 +2,8 @@ import { baseUrl, getPosts, getPostsCategories } from "../../utils/shared.js"
 import { addParamToUrl, getFromLocalStorage, calcTimeFormat, getURLParam, removeParamFromURL } from "../../utils/utils.js"
 
 const categoryID = getURLParam('categoryID')
+let posts = null
+let backupPosts = null
 
 const generatePosts = async (posts) => {
      const postContainer = document.querySelector('#posts-container')
@@ -60,12 +62,9 @@ const generatePosts = async (posts) => {
 
      if (categoryID) {
           const catInfos = categories.filter(cat => cat._id == categoryID)
-
           if (!catInfos.length) {
                const subCategory = findSubcategoryByID(categories, categoryID)
-
                subCategory?.filters.forEach(filter => filterGenerator(filter))
-
                if (subCategory) {
                     categoriesContainer.insertAdjacentHTML('beforeend', `
                     <div class="all-categories">
@@ -154,7 +153,7 @@ const findSubSubcategoryByID = (categories, categoryID) => {
 
 const filterGenerator = (filter) => {
      const sidebarFiltersContainer = document.querySelector('#sidebar-filters')
-
+     // sidebarFiltersContainer.innerHTML = ''
      sidebarFiltersContainer.insertAdjacentHTML("beforebegin", `
                  ${filter.type === "selectbox" ? `
                 <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -220,14 +219,40 @@ window.backToAllCategories = () => {
      removeParamFromURL("categoryID")
 }
 
+const justPhotoController = document.querySelector('#just_photo_controll')
+const exchangeController = document.querySelector('#exchange_controll')
+
+const applyFilters = (posts) => {
+     let filteredPosts = backupPosts
+
+     if (justPhotoController.checked) {
+          filteredPosts = filteredPosts.filter(post => post.pics.length)
+     }
+     if (exchangeController.checked) {
+          filteredPosts = filteredPosts.filter(post => post.exchange)
+     }
+
+     generatePosts(filteredPosts)
+}
+
+justPhotoController.addEventListener('change', () => {
+     applyFilters(posts)
+})
+
+exchangeController.addEventListener('change', () => {
+     applyFilters(posts)
+})
+
 window.addEventListener('load', async () => {
      const cities = getFromLocalStorage('cities')
      const searchValue = getURLParam('value')
      const cityID = Number(JSON.parse(cities)[0].id)
      const allPostsDatas = await getPosts(cityID)
 
-     generatePosts(allPostsDatas.posts)
+     posts = allPostsDatas.posts
+     backupPosts = allPostsDatas.posts
 
+     generatePosts(allPostsDatas.posts)
 
      // Global Search
      const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')

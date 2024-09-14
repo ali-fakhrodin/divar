@@ -1,5 +1,8 @@
 import { getAndShowSocials } from "../../utils/shared.js"
-import { addParamToUrl } from "../../utils/utils.js"
+import { addParamToUrl, getURLParam, hideModal, showModal } from "../../utils/utils.js"
+
+const mostSearchKeys = ["ماشین", "لباس", "ساعت", "کفش", "سامسونگ"]
+const mostSearchContainer = document.querySelector('.header__searchbar-dropdown-list')
 
 window.addEventListener("load", () => {
      const loadingContainer = document.querySelector('#loading-container')
@@ -16,5 +19,29 @@ window.addEventListener("load", () => {
                     addParamToUrl('value', e.target.value.trim())
                }
           }
+     })
+
+     globalSearchInp?.addEventListener('click', () => {
+          const modalOverlay = document.querySelector('.searchbar__modal-overlay')
+          showModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
+          
+          modalOverlay.addEventListener('click', () => {
+               hideModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
+          })
+     })
+
+     mostSearchKeys.forEach(key => {
+
+          const catID = getURLParam('categoryID')
+
+          let href = `posts.html?value=${key}${catID ? `&categoryID=${catID}` : ''}`
+
+          console.log(href);
+          
+          mostSearchContainer?.insertAdjacentHTML('beforeend', `
+                    <li class="header__searchbar-dropdown-item">
+                         <a href="${href}" class="header__searchbar-dropdown-link">${key}</a>
+                    </li>
+               `)
      })
 })
