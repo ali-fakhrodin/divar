@@ -60,7 +60,6 @@ const generatePosts = async (posts) => {
 
      if (categoryID) {
           const catInfos = categories.filter(cat => cat._id == categoryID)
-          console.log('catInfos =>', catInfos);
 
           if (!catInfos.length) {
                const subCategory = findSubcategoryByID(categories, categoryID)

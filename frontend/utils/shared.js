@@ -27,10 +27,15 @@ const getAndShowSocials = async () => {
 
 const getPosts = async (citiesIDs) => {
      const catID = getURLParam("categoryID")
+     const searchValue = getURLParam("value")
+     
      let url = `${baseUrl}/v1/post/?city=${citiesIDs}`
 
      if (catID) {
           url += `&categoryId=${catID}`
+     }
+     if (searchValue) {
+          url += `&search=${searchValue}`
      }
 
      const res = await axios({ url: url })
