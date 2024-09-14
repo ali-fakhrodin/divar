@@ -31,12 +31,9 @@ window.addEventListener("load", () => {
      })
 
      mostSearchKeys.forEach(key => {
-
           const catID = getURLParam('categoryID')
 
           let href = `posts.html?value=${key}${catID ? `&categoryID=${catID}` : ''}`
-
-          console.log(href);
           
           mostSearchContainer?.insertAdjacentHTML('beforeend', `
                     <li class="header__searchbar-dropdown-item">
