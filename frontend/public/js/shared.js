@@ -1,5 +1,5 @@
 import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials } from "../../utils/shared.js"
-import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, showModal } from "../../utils/utils.js"
+import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, saveInLocalStorage, showModal } from "../../utils/utils.js"
 
 const loadingContainer = document.querySelector('#loading-container')
 const globalSearchInp = document.querySelector('#global_search_input')
@@ -9,13 +9,13 @@ const deleteAllSelectedCities = document.querySelector('#delete-all-cities')
 const mostSearchKeys = ["ماشین", "لباس", "ساعت", "کفش", "سامسونگ"]
 const mostSearchContainer = document.querySelector('.header__searchbar-dropdown-list')
 const citiesModalList = document.querySelector('#city_modal_list')
+const citiesModalAcceptBtn = document.querySelector('.city-modal__accept')
+const citiesModalCloseBtn = document.querySelector('.city-modal__close')
+const cityModalError = document.querySelector('#city_modal_error')
+const cityModalOverlay = document.querySelector('.city-modal__overlay')
 
 let selectedCities = []
 let allCities = []
-
-window.removeCityFromModal = (cityID) => {
-     console.log(cityID);
-}
 
 getAllLocations().then(data => {
      allCities = data
@@ -23,7 +23,8 @@ getAllLocations().then(data => {
 });
 
 const showProvinces = (data) => {
-     data.provinces.forEach(province => citiesModalList.insertAdjacentHTML('beforeend', `
+     citiesModalList ? citiesModalList.innerHTML = '' : null
+     data.provinces.forEach(province => citiesModalList?.insertAdjacentHTML('beforeend', `
                <li class="city-modal__cities-item province-item" data-province-id="${province.id}">
                     <span>${province.name}</span>
                     <i class="city-modal__cities-icon bi bi-chevron-left"></i>
@@ -96,9 +97,36 @@ window.cityItemClickHandler = (cityID) => {
           checkboxShape.classList.remove('active')
           addCitiesToModal(selectedCities)
      }
+     toggleCityModalBtns(selectedCities)
 
-     console.log(checkbox);
-     console.log(checkbox.checked);
+}
+
+window.removeCityFromModal = (cityID) => {
+     const currentCity = document.querySelector(`#city-${cityID}`)
+
+     if (currentCity) {
+          const checkbox = currentCity.querySelector('input')
+          const checkboxShape = currentCity.querySelector('div')
+
+          checkbox.checked = false
+          checkboxShape.classList.remove('active')
+
+          selectedCities = selectedCities.filter(city => city.id != cityID)
+          addCitiesToModal(selectedCities)
+          toggleCityModalBtns(selectedCities)
+     }
+}
+
+const toggleCityModalBtns = (cities) => {
+     if (cities.length) {
+          citiesModalAcceptBtn.classList.replace('city-modal__accept', 'city-modal__accept--active')
+          deleteAllSelectedCities.style.display = 'block'
+          cityModalError.style.display = 'none'
+     } else {
+          citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
+          deleteAllSelectedCities.style.display = 'none'
+          cityModalError.style.display = 'block'
+     }
 }
 
 const updateSelectedCities = (cityTitle, cityID) => {
@@ -168,5 +196,27 @@ window.addEventListener("load", () => {
 
           selectedCities = cities
           addCitiesToModal(selectedCities)
+     })
+
+     citiesModalAcceptBtn?.addEventListener('click', () => {
+          const citiesIDs = selectedCities.map(city => city.id).join('|')
+          addParamToUrl('cities', citiesIDs)
+
+          saveInLocalStorage('cities', selectedCities)
+          hideModal('city-modal', 'city-modal--active')
+          getAndShowHeaderCityLocation()
+          showProvinces(allCities)
+     })
+
+     citiesModalCloseBtn?.addEventListener('click', () => {
+          hideModal('city-modal', 'city-modal--active')
+          citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
+          showProvinces(allCities)
+     })
+
+     cityModalOverlay?.addEventListener('click', () => {
+          hideModal('city-modal', 'city-modal--active')
+          citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
+          showProvinces(allCities)
      })
 })

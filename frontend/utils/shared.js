@@ -68,7 +68,7 @@ const getAndShowHeaderCityLocation = () => {
      } else if (userCities.length === 1) {
           headerCityTitle ? headerCityTitle.innerHTML = userCities[0].name : ''
      } else {
-          headerCityTitle.innerHTML = `بیش از ${userCities.length} شهر `
+          headerCityTitle ? headerCityTitle.innerHTML = `بیش از ${userCities.length} شهر ` : ''
      }
 }
 
