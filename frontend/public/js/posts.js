@@ -1,5 +1,5 @@
 import { baseUrl, getPosts, getPostsCategories } from "../../utils/shared.js"
-import { addParamToUrl, getFromLocalStorage, calcTimeFormat, getURLParam, removeParamFromURL } from "../../utils/utils.js"
+import { addParamToUrl, getFromLocalStorage, calcTimeFormat, getURLParam, removeParamFromURL, hideModal } from "../../utils/utils.js"
 
 const categoryID = getURLParam('categoryID')
 let posts = null
@@ -143,6 +143,8 @@ window.selectBoxFilterHandler = (value, slug) => {
      applyFilters()
 }
 
+window.hideModal = hideModal
+
 const justPhotoController = document.querySelector('#just_photo_controll')
 const exchangeController = document.querySelector('#exchange_controll')
 const minPriceSelectbox = document.querySelector('#min-price-selectbox')
@@ -156,7 +158,7 @@ const applyFilters = () => {
           filteredPosts = filteredPosts.filter(post =>
                post.dynamicFields.some(field => field.slug == slug && field.data == appliedFilters[slug]))
      }
-     
+
      if (justPhotoController.checked) {
           filteredPosts = filteredPosts.filter(post => post.pics.length)
      }
@@ -204,15 +206,16 @@ exchangeController.addEventListener('change', () => {
 window.addEventListener('load', async () => {
      const cities = getFromLocalStorage('cities')
      const searchValue = getURLParam('value')
-     const cityID = Number(JSON.parse(cities)[0].id)
+     const cityID = Number((cities)[0]?.id)
+     
      const allPostsDatas = await getPosts(cityID)
      const categoriesContainer = document.querySelector('#categories-container')
-     console.log(allPostsDatas.posts);
-
+     
      posts = allPostsDatas.posts
      backupPosts = allPostsDatas.posts
 
      generatePosts(allPostsDatas.posts)
+     
      const categories = await getPostsCategories()
 
      if (categoryID) {

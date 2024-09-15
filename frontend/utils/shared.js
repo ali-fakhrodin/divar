@@ -1,4 +1,4 @@
-import { getURLParam } from "./utils.js"
+import { getFromLocalStorage, getURLParam, saveInLocalStorage } from "./utils.js"
 
 const baseUrl = "https://divarapi.liara.run"
 
@@ -7,6 +7,13 @@ const getAllCities = async () => {
      const cities = await res.data
 
      return cities
+}
+
+const getAllLocations = async () => {
+     const res = await axios ({url: `${baseUrl}/v1/location`})
+     const response = res.data
+
+     return response.data
 }
 
 const getAndShowSocials = async () => {
@@ -28,7 +35,7 @@ const getAndShowSocials = async () => {
 const getPosts = async (citiesIDs) => {
      const catID = getURLParam("categoryID")
      const searchValue = getURLParam("value")
-     
+
      let url = `${baseUrl}/v1/post/?city=${citiesIDs}`
 
      if (catID) {
@@ -51,10 +58,26 @@ const getPostsCategories = async () => {
      return categories
 }
 
+const getAndShowHeaderCityLocation = () => {
+     const userCities = getFromLocalStorage('cities')
+     const headerCityTitle = document.querySelector('#header-city-title')
+
+     if (!userCities) {
+          saveInLocalStorage("cities", [{ name: "تهران", id: 301 }])
+          location.reload()
+     } else if (userCities.length === 1) {
+          headerCityTitle ? headerCityTitle.innerHTML = userCities[0].name : ''
+     } else {
+          headerCityTitle.innerHTML = `بیش از ${userCities.length} شهر `
+     }
+}
+
 export {
      baseUrl,
      getAllCities,
      getAndShowSocials,
      getPosts,
      getPostsCategories,
+     getAndShowHeaderCityLocation,
+     getAllLocations,
 }
