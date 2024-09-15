@@ -311,6 +311,7 @@ window.addEventListener('load', async () => {
           removeParamFromURL('value')
           searchInp.value = ''
      })
+     
      if (searchValue) {
           removeSearchValueIcon.style.display = 'block'
           searchInp.value = searchValue

@@ -23,6 +23,8 @@ getAllLocations().then(data => {
 });
 
 const showProvinces = (data) => {
+     document.querySelector('.city-modal__cities').scrollTop = 0
+
      citiesModalList ? citiesModalList.innerHTML = '' : null
      data.provinces.forEach(province => citiesModalList?.insertAdjacentHTML('beforeend', `
                <li class="city-modal__cities-item province-item" data-province-id="${province.id}">
@@ -217,6 +219,15 @@ window.addEventListener("load", () => {
      cityModalOverlay?.addEventListener('click', () => {
           hideModal('city-modal', 'city-modal--active')
           citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
+          showProvinces(allCities)
+     })
+
+     deleteAllSelectedCities.addEventListener('click', () => {
+          selectedCities = []
+          addCitiesToModal(selectedCities)
+          citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
+          cityModalError.style.display = 'block'
+          deleteAllSelectedCities.style.display = 'none'
           showProvinces(allCities)
      })
 })
