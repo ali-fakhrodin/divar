@@ -2,6 +2,10 @@ const saveInLocalStorage = (key, value) => {
      localStorage.setItem(key, JSON.stringify(value))
 }
 
+const isLogin = () => {
+     return true
+}
+
 const getFromLocalStorage = (key) => {
      return JSON.parse(localStorage.getItem(key))
 }
@@ -62,4 +66,5 @@ export {
      removeParamFromURL,
      showModal,
      hideModal,
+     isLogin,
 }

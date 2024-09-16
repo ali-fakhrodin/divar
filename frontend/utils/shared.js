@@ -78,7 +78,7 @@ const getPostDetails = async () => {
      const res = await axios ({url: `${baseUrl}/v1/post/${postID}`})
      const response = await res.data.data
  
-     console.log(response);
+     return response
 }
 
 export {
