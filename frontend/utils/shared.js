@@ -37,7 +37,7 @@ const getPosts = async (citiesIDs) => {
      const searchValue = getURLParam("value")
 
      let url = `${baseUrl}/v1/post/?city=${citiesIDs}`
-
+     
      if (catID) {
           url += `&categoryId=${catID}`
      }

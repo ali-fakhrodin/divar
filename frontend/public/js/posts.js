@@ -206,9 +206,9 @@ exchangeController.addEventListener('change', () => {
 window.addEventListener('load', async () => {
      const cities = getFromLocalStorage('cities')
      const searchValue = getURLParam('value')
-     const cityID = Number((cities)[0]?.id)
+     const citiesIDs = cities.map(city => city.id).join('|')
      
-     const allPostsDatas = await getPosts(cityID)
+     const allPostsDatas = await getPosts(citiesIDs)
      const categoriesContainer = document.querySelector('#categories-container')
      
      posts = allPostsDatas.posts

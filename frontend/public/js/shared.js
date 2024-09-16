@@ -13,6 +13,7 @@ const citiesModalAcceptBtn = document.querySelector('.city-modal__accept')
 const citiesModalCloseBtn = document.querySelector('.city-modal__close')
 const cityModalError = document.querySelector('#city_modal_error')
 const cityModalOverlay = document.querySelector('.city-modal__overlay')
+const cityModalSearchInput = document.querySelector('#city-modal-search-input')
 
 let selectedCities = []
 let allCities = []
@@ -229,5 +230,31 @@ window.addEventListener("load", () => {
           cityModalError.style.display = 'block'
           deleteAllSelectedCities.style.display = 'none'
           showProvinces(allCities)
+     })
+
+     cityModalSearchInput.addEventListener('keyup', e => {
+          const filteredCities = allCities.cities.filter(city => city.name.includes(e.target.value))
+
+          if (e.target.value.trim() && filteredCities.length) {
+
+               citiesModalList.innerHTML = ''
+               filteredCities.forEach(city => {
+                    const isSelected = selectedCities.some(selectedCity => selectedCity.name === city.name)
+                    console.log(city);
+
+                    citiesModalList.insertAdjacentHTML('beforeend', `
+                    <li class="city-modal__cities-item city-item" id="city-${city.id}">
+                         <span>${city.name}</span>
+                         <div id="checkboxShape" class="${isSelected && 'active'}"></div>
+                         <input id="city-item-checkbox" type="checkbox" onchange="cityItemClickHandler('${city.id}')" checked=true>
+                    </li>
+                         `)
+               })
+
+          } else {
+               if (e.target.value.trim() === '') {
+                    showProvinces(allCities)
+               }
+          }
      })
 })
