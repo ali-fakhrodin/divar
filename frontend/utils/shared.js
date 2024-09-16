@@ -72,6 +72,15 @@ const getAndShowHeaderCityLocation = () => {
      }
 }
 
+const getPostDetails = async () => {
+     const postID = getURLParam('id')
+
+     const res = await axios ({url: `${baseUrl}/v1/post/${postID}`})
+     const response = await res.data.data
+ 
+     console.log(response);
+}
+
 export {
      baseUrl,
      getAllCities,
@@ -80,4 +89,5 @@ export {
      getPostsCategories,
      getAndShowHeaderCityLocation,
      getAllLocations,
+     getPostDetails,
 }
