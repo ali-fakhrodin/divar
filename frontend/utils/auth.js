@@ -1,5 +1,5 @@
 import { baseUrl } from "./shared.js"
-import { hideModal, showModal } from "./utils.js"
+import { hideModal, saveInLocalStorage, showModal } from "./utils.js"
 
 const step1LoginFormError = document.querySelector('.step-1-login-form__error')
 const phoneNumberInput = document.querySelector('.phone_Number_input')
@@ -34,7 +34,7 @@ const submitNumber = async () => {
                userNumberNotice.innerHTML = phoneNumber
                requestNewCodeBtn.style.display = 'none'
                requestTimerCount.style.display = 'block'
-               let count = 5
+               let count = 30
 
                const timer = setInterval(() => {
                     count--
@@ -73,8 +73,10 @@ const verifyOtp = async () => {
           })
           
           if (res.status === 200 || res.status === 201) {
+               const response = await res.data.data
+               saveInLocalStorage('divar', response.token)
+
                hideModal('login-modal', 'login-modal--active')
-               console.log(200);
                loading.classList.remove('active-login-loader')
                Swal.fire({
                     title: 'لاگین با موفقیت انجام شد',
