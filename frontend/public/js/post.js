@@ -1,11 +1,13 @@
-import { getPostDetails } from "../../utils/shared.js"
-import { calcTimeFormat, hideModal, isLogin, showModal } from "../../utils/utils.js";
+import { baseUrl, getPostDetails } from "../../utils/shared.js"
+import { calcTimeFormat, getToken, hideModal, isLogin, showModal } from "../../utils/utils.js";
 
 window.addEventListener('load', () => {
-     getPostDetails().then(res => {
+     getPostDetails().then(async res => {
           const postDetails = res.post
 
-          const isUserLogin = isLogin()
+          const isUserLogin = await isLogin()
+          const token = getToken()
+          let noteID = postDetails.note._id
 
           const postTitleElem = document.querySelector('#post-title')
           const postDescElem = document.querySelector('#post-description')
@@ -64,21 +66,49 @@ window.addEventListener('load', () => {
                })
           })
 
-          if (!isLogin) {
+          // Note Textaria
+          if (isUserLogin) {
+               if (postDetails.note) {
+                    noteTextarea.value = postDetails.note.content
+                    noteTrashIcon.style.display = 'block'
+                    noteID = postDetails.note._id
+               }
+
+               noteTrashIcon.addEventListener('click', () => {
+                    noteTextarea.value = ''
+                    noteTrashIcon.style.display = 'none'
+               })
+
                noteTextarea.addEventListener('keyup', () => {
                     if (noteTextarea.value.trim()) {
                          noteTrashIcon.style.display = 'block'
                     } else {
                          noteTrashIcon.style.display = 'none'
                     }
-                    noteTrashIcon.addEventListener('click', () => {
-                         noteTextarea.value = ''
-                         noteTrashIcon.style.display = 'none'
-                    })
                })
 
-               noteTextarea.addEventListener('blur', () => {
-                    console.log(noteTextarea.value);
+               noteTextarea.addEventListener('blur', async () => {
+                    if (noteID) {
+                         await axios({
+                              url: `${baseUrl}/v1/note/${noteID}`,
+                              method: 'put',
+                              data: JSON.stringify({ content: noteTextarea.value }),
+                              headers: {
+                                   "Content-Type": "application/json",
+                                   Authorization: `Bearer ${token}`
+                              },
+                         })
+                    } else {
+                         await axios({
+                              url: `${baseUrl}/v1/note`,
+                              method: 'post',
+                              data: JSON.stringify({ postId: postDetails._id, content: noteTextarea.value }),
+                              headers: {
+                                   "Content-Type": "application/json",
+                                   Authorization: `Bearer ${token}`
+                              },
+                         })
+                    }
                })
 
           } else {

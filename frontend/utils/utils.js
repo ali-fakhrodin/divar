@@ -1,9 +1,28 @@
+import { baseUrl } from "./shared.js"
+
 const saveInLocalStorage = (key, value) => {
      localStorage.setItem(key, JSON.stringify(value))
 }
 
-const isLogin = () => {
-     return true
+const getToken = () => {
+     const token = getFromLocalStorage('divar')
+     return token
+}
+
+const isLogin = async () => {
+     const token = getToken()
+
+     if (token) {
+          const res = await axios({
+               url: `${baseUrl}/v1/auth/me`,
+               headers: {
+                    Authorization: `Bearer ${token}`
+               }
+          });
+          return res.status === 200 ? true : false
+     } else {
+          return false
+     }     
 }
 
 const getFromLocalStorage = (key) => {
@@ -67,4 +86,5 @@ export {
      showModal,
      hideModal,
      isLogin,
+     getToken
 }

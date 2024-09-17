@@ -268,15 +268,13 @@ window.addEventListener("load", () => {
      loginModalOverlay?.addEventListener('click', () => {
           hideModal('login-modal', 'active_step_2')
           hideModal('login-modal', 'login-modal--active')
-          console.log('d');
-          
      })
-     
+
      loginModalCloseBtn?.addEventListener('click', () => {
           hideModal('login-modal', 'active_step_2')
           hideModal('login-modal', 'login-modal--active')
      })
-     
+
      submitPhoneNumberBtn?.addEventListener('click', e => {
           e.preventDefault()
           submitNumber()
@@ -284,6 +282,5 @@ window.addEventListener("load", () => {
 
      loginBtn?.addEventListener('click', () => {
           verifyOtp()
-          
      })
 })

@@ -4,13 +4,12 @@ import { hideModal, saveInLocalStorage, showModal } from "./utils.js"
 const step1LoginFormError = document.querySelector('.step-1-login-form__error')
 const phoneNumberInput = document.querySelector('.phone_Number_input')
 const userNumberNotice = document.querySelector('.user_number_notice')
-const requestTimerContainer = document.querySelector('.request_timer')
+// const requestTimerContainer = document.querySelector('.request_timer')
 const requestTimerCount = document.querySelector('.request_timer span')
 const requestNewCodeBtn = document.querySelector('.request_timer p')
 const loading = document.querySelector('#loading-container')
 const otpInput = document.querySelector('.code_input')
 const step2LoginFormError = document.querySelector('.step-2-login-form__error')
-
 
 const submitNumber = async () => {
      loading.classList.add('active-login-loader')
@@ -52,7 +51,6 @@ const submitNumber = async () => {
           step1LoginFormError.innerHTML = 'شماره تماس وارد شده معتبر نیست'
      }
 }
-
 
 const verifyOtp = async () => {
      loading.classList.add('active-login-loader')
