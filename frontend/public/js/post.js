@@ -118,5 +118,46 @@ window.addEventListener('load', () => {
                     showModal('login-modal', 'login-modal--active')
                })
           }
+
+          // Picturs Swiper
+          if (postDetails.pics.length) {
+               postDetails.pics.map(pic => {
+                    mainSlider.insertAdjacentHTML(
+                         "beforeend",
+                         `
+                           <div class="swiper-slide">
+                             <img src="${baseUrl}/${pic.path}" />
+                           </div>
+                         `
+                    );
+
+                    secendSlider.insertAdjacentHTML(
+                         "beforeend",
+                         `
+                           <div class="swiper-slide">
+                             <img src="${baseUrl}/${pic.path}" />
+                           </div>
+                         `
+                    );
+               })
+          } else {
+               postPreview.style.display = 'none'
+          }
+
+          const mainSliderConfigs = new Swiper('.mySwiper', {
+               spaceBetween: 10,
+               rewind: true,
+          })
+
+          const secondSliderConfigs = new Swiper('.mySwiper2', {
+               spaceBetween: 10,
+               navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                  },
+               thumbs: {
+                    swiper: mainSliderConfigs
+               }
+          })
      })
 })
