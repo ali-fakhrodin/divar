@@ -1,12 +1,12 @@
 import { getPostDetails } from "../../utils/shared.js"
-import { calcTimeFormat, isLogin } from "../../utils/utils.js";
+import { calcTimeFormat, hideModal, isLogin, showModal } from "../../utils/utils.js";
 
 window.addEventListener('load', () => {
      getPostDetails().then(res => {
           const postDetails = res.post
 
           const isUserLogin = isLogin()
-          
+
           const postTitleElem = document.querySelector('#post-title')
           const postDescElem = document.querySelector('#post-description')
           const postLocationElem = document.querySelector('#post-location')
@@ -16,7 +16,11 @@ window.addEventListener('load', () => {
           const mainSlider = document.querySelector("#main-slider-wrapper");
           const secendSlider = document.querySelector("#secend-slider-wrapper");
           const noteTextarea = document.querySelector("#note-textarea");
+          const noteTrashIcon = document.querySelector("#note-trash-icon");
           const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
+          const phoneInfoBtn = document.querySelector("#phone-info-btn");
+
+          const loginModalOverlay = document.querySelector("#login_modal_overlay");
 
           postTitleElem.innerHTML = postDetails.title
           postDescElem.innerHTML = postDetails.description
@@ -27,7 +31,6 @@ window.addEventListener('load', () => {
           shareIconElem.addEventListener('click', async () => {
                await navigator.share(location.href)
           })
-
 
           postInfos.insertAdjacentHTML('beforeend', `
                     <li class="post__info-item">
@@ -45,5 +48,45 @@ window.addEventListener('load', () => {
                `)
           })
 
+          phoneInfoBtn.addEventListener('click', () => {
+               Swal.fire({
+                    title: `شماره تماس : ${postDetails.creator.phone}`,
+                    confirmButtonText: 'تماس گرفتن',
+               })
+          })
+
+          postFeedbackIcons.forEach(icon => {
+               icon.addEventListener('click', () => {
+                    postFeedbackIcons.forEach(icon => {
+                         icon.classList.remove('active')
+                    })
+                    icon.classList.add('active')
+               })
+          })
+
+          if (!isLogin) {
+               noteTextarea.addEventListener('keyup', () => {
+                    if (noteTextarea.value.trim()) {
+                         noteTrashIcon.style.display = 'block'
+                    } else {
+                         noteTrashIcon.style.display = 'none'
+                    }
+                    noteTrashIcon.addEventListener('click', () => {
+                         noteTextarea.value = ''
+                         noteTrashIcon.style.display = 'none'
+                    })
+               })
+
+               noteTextarea.addEventListener('blur', () => {
+                    console.log(noteTextarea.value);
+               })
+
+          } else {
+               noteTextarea.addEventListener('focus', e => {
+                    e.preventDefault()
+                    hideModal('login-modal', 'active_step_2')
+                    showModal('login-modal', 'login-modal--active')
+               })
+          }
      })
 })

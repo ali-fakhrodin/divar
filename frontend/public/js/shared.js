@@ -1,3 +1,4 @@
+import { submitNumber, verifyOtp } from "../../utils/auth.js"
 import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials } from "../../utils/shared.js"
 import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, saveInLocalStorage, showModal } from "../../utils/utils.js"
 
@@ -6,7 +7,6 @@ const globalSearchInp = document.querySelector('#global_search_input')
 const modalOverlay = document.querySelector('.searchbar__modal-overlay')
 const headerCity = document.querySelector('.header__city')
 const deleteAllSelectedCities = document.querySelector('#delete-all-cities')
-const mostSearchKeys = ["ماشین", "لباس", "ساعت", "کفش", "سامسونگ"]
 const mostSearchContainer = document.querySelector('.header__searchbar-dropdown-list')
 const citiesModalList = document.querySelector('#city_modal_list')
 const citiesModalAcceptBtn = document.querySelector('.city-modal__accept')
@@ -14,6 +14,13 @@ const citiesModalCloseBtn = document.querySelector('.city-modal__close')
 const cityModalError = document.querySelector('#city_modal_error')
 const cityModalOverlay = document.querySelector('.city-modal__overlay')
 const cityModalSearchInput = document.querySelector('#city-modal-search-input')
+const submitPhoneNumberBtn = document.querySelector('.submit_phone_number_btn')
+
+const mostSearchKeys = ["ماشین", "لباس", "ساعت", "کفش", "سامسونگ"]
+
+const loginModalOverlay = document.querySelector('.login_modal_overlay')
+const loginModalCloseBtn = document.querySelector('.login-modal__header-btn')
+const loginBtn = document.querySelector('.login_btn')
 
 let selectedCities = []
 let allCities = []
@@ -24,7 +31,7 @@ getAllLocations().then(data => {
 });
 
 const showProvinces = (data) => {
-     document.querySelector('.city-modal__cities').scrollTop = 0
+     document.querySelector('.city-modal__cities') ? document.querySelector('.city-modal__cities').scrollTop = 0 : null
 
      citiesModalList ? citiesModalList.innerHTML = '' : null
      data.provinces.forEach(province => citiesModalList?.insertAdjacentHTML('beforeend', `
@@ -223,7 +230,7 @@ window.addEventListener("load", () => {
           showProvinces(allCities)
      })
 
-     deleteAllSelectedCities.addEventListener('click', () => {
+     deleteAllSelectedCities?.addEventListener('click', () => {
           selectedCities = []
           addCitiesToModal(selectedCities)
           citiesModalAcceptBtn.classList.replace('city-modal__accept--active', 'city-modal__accept')
@@ -232,7 +239,7 @@ window.addEventListener("load", () => {
           showProvinces(allCities)
      })
 
-     cityModalSearchInput.addEventListener('keyup', e => {
+     cityModalSearchInput?.addEventListener('keyup', e => {
           const filteredCities = allCities.cities.filter(city => city.name.includes(e.target.value))
 
           if (e.target.value.trim() && filteredCities.length) {
@@ -256,5 +263,27 @@ window.addEventListener("load", () => {
                     showProvinces(allCities)
                }
           }
+     })
+
+     loginModalOverlay?.addEventListener('click', () => {
+          hideModal('login-modal', 'active_step_2')
+          hideModal('login-modal', 'login-modal--active')
+          console.log('d');
+          
+     })
+     
+     loginModalCloseBtn?.addEventListener('click', () => {
+          hideModal('login-modal', 'active_step_2')
+          hideModal('login-modal', 'login-modal--active')
+     })
+     
+     submitPhoneNumberBtn?.addEventListener('click', e => {
+          e.preventDefault()
+          submitNumber()
+     })
+
+     loginBtn?.addEventListener('click', () => {
+          verifyOtp()
+
      })
 })
