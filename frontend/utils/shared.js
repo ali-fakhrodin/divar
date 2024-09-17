@@ -22,7 +22,7 @@ const getAndShowSocials = async () => {
      const socials = await res.data.data.socials
 
      socials.forEach(social => {
-          socialMediaContainer.insertAdjacentHTML('beforeend', `
+          socialMediaContainer?.insertAdjacentHTML('beforeend', `
                     <a href="https://${social.link}" target="b_lank" class="sidebar__icon-link">
                          <img src="./public/${social.icon.path}" width="20px" height="20px" alt="${social.name}" class="sidebare__icon" />
                     </a>

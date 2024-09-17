@@ -169,7 +169,7 @@ window.addEventListener("load", () => {
      getAndShowSocials()
      getAndShowHeaderCityLocation()
 
-     loadingContainer.style.display = 'none'
+     loadingContainer ? loadingContainer.style.display = 'none' : null
 
      globalSearchInp?.addEventListener('keydown', e => {
           if (e.keyCode == 13) {
@@ -284,6 +284,6 @@ window.addEventListener("load", () => {
 
      loginBtn?.addEventListener('click', () => {
           verifyOtp()
-
+          
      })
 })

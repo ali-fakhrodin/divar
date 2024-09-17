@@ -71,6 +71,7 @@ const verifyOtp = async () => {
                },
                data: JSON.stringify({phone: phoneNumberInput.value, otp: userOtp})
           })
+          
           if (res.status === 200 || res.status === 201) {
                hideModal('login-modal', 'login-modal--active')
                console.log(200);
@@ -79,8 +80,9 @@ const verifyOtp = async () => {
                     title: 'لاگین با موفقیت انجام شد',
                     confirmButtonText: 'اوکیه',
                     icon: 'success'
-               }).then(() => location.href = g)
-          } else if (res.status === 400) {
+               }).then(() => location.href = './userPanel/verify.html')
+
+          } else {
                loading.classList.remove('active-login-loader')
                step2LoginFormError.innerHTML = 'کد وارد شده نا معتبره!'
           }
