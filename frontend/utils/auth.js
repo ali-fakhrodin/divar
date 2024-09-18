@@ -42,7 +42,7 @@ const submitNumber = async () => {
                          clearInterval(timer)
                          requestNewCodeBtn.style.display = 'block'
                          requestTimerCount.style.display = 'none'
-                         requestTimerCount.textContent = 10
+                         requestTimerCount.textContent = 30
                     }
                }, 1000)
           }

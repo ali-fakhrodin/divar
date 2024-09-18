@@ -1,6 +1,6 @@
 import { submitNumber, verifyOtp } from "../../utils/auth.js"
 import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials, showPanelLinks } from "../../utils/shared.js"
-import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, saveInLocalStorage, showModal } from "../../utils/utils.js"
+import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, isLogin, saveInLocalStorage, showModal } from "../../utils/utils.js"
 
 const loadingContainer = document.querySelector('#loading-container')
 const globalSearchInp = document.querySelector('#global_search_input')
@@ -21,6 +21,8 @@ const mostSearchKeys = ["ماشین", "لباس", "ساعت", "کفش", "سام�
 const loginModalOverlay = document.querySelector('.login_modal_overlay')
 const loginModalCloseBtn = document.querySelector('.login-modal__header-btn')
 const loginBtn = document.querySelector('.login_btn')
+
+const createPostBtn = document.querySelector('.create_post_btn')
 
 let selectedCities = []
 let allCities = []
@@ -165,7 +167,9 @@ const addCitiesToModal = async (cities) => {
      })
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
+     const isUserLogin = await isLogin()
+
      getAndShowSocials()
      showPanelLinks()
      getAndShowHeaderCityLocation()
@@ -266,6 +270,7 @@ window.addEventListener("load", () => {
           }
      })
 
+     // User Login
      loginModalOverlay?.addEventListener('click', () => {
           hideModal('login-modal', 'active_step_2')
           hideModal('login-modal', 'login-modal--active')
@@ -283,5 +288,15 @@ window.addEventListener("load", () => {
 
      loginBtn?.addEventListener('click', () => {
           verifyOtp()
+     })
+
+     // Create New Post
+     createPostBtn?.addEventListener("click", () => {
+          console.log('clicked');
+          if (isUserLogin) {
+               location.href = `./new.html`
+          } else {
+               showModal('login-modal', 'login-modal--active')
+          }
      })
 })

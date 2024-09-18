@@ -40,6 +40,4 @@ window.addEventListener('load', async () => {
             `
           );
      });
-
-
 })
