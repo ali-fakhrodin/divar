@@ -16,5 +16,4 @@ window.addEventListener('load', async () => {
      breadcumbSpan.innerHTML = articleDetails.title;
      articleTitle.innerHTML = articleDetails.title;
      articleBody.innerHTML = articleDetails.body;
-     console.log(articleDetails);
 })

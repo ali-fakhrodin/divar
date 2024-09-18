@@ -188,7 +188,13 @@ const getArticleByID = async (id) => {
      const res = await axios({url: `${baseUrl}/v1/support/articles/${id}`})
      const response = await res.data.data.article
      
+     return response
+}
 
+const getArticles = async () => {
+     const res = await axios({url: `${baseUrl}/v1/support/category-articles`})
+     const response = await res.data.data.categories
+     
      return response
 }
 
@@ -204,4 +210,5 @@ export {
      showPanelLinks,
      getSupportArticles,
      getArticleByID,
+     getArticles,
 }

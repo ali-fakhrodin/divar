@@ -2,7 +2,6 @@ import { baseUrl, getSupportArticles } from "../../utils/shared.js"
 
 window.addEventListener('load', async () => {
      const supportArticlesCategory = await getSupportArticles()
-     console.log(supportArticlesCategory);
 
      const popularArticlesElement = document.querySelector("#popular-articles");
      const categoriesContainerElement = document.querySelector("#categories-container");
@@ -24,16 +23,15 @@ window.addEventListener('load', async () => {
                `)
      })
 
-     supportArticlesCategory.map((category) => {
+     supportArticlesCategory.map(category => {          
           categoriesContainerElement.insertAdjacentHTML(
                "beforeend",
                `
                 <a href="../pages/support/articles.html?id=${category._id}">
-                    <img src="${baseUrl}/${category.pic.path}" width="64" height="64" alt="" />
+                    <img src="${baseUrl}/${category.pic.path}" width="64" height="64" alt="pic" />
                     <div>
-                    <p>${category.name}</p>
-                    <span>نحوه انجام پرداخت، استفاده از کیف پول، افزایش بازدید، استفاده از
-                    </span>
+                         <p>${category.name}</p>
+                         <span>نحوه انجام پرداخت، استفاده از کیف پول، افزایش بازدید، استفاده از</span>
                     </div>
                     <i class="bi bi-chevron-left"></i>
                 </a>
