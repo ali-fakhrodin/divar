@@ -22,7 +22,7 @@ const isLogin = async () => {
           return res.status === 200 ? true : false
      } else {
           return false
-     }     
+     }
 }
 
 const getFromLocalStorage = (key) => {
@@ -76,6 +76,24 @@ const hideModal = (id, className) => {
      element.classList.remove(className)
 }
 
+const getMe = async () => {
+     const token = getToken()
+
+     if (!token) {
+          return false
+     }
+     
+     const res = await axios({
+          url: `${baseUrl}/v1/auth/me`,
+          headers: {
+               Authorization: `Bearer ${token}`
+          }
+     })
+     const response = await res.data.data.user
+
+     return response
+}
+
 export {
      saveInLocalStorage,
      getFromLocalStorage,
@@ -86,5 +104,6 @@ export {
      showModal,
      hideModal,
      isLogin,
-     getToken
+     getToken,
+     getMe,
 }

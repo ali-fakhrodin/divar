@@ -1,5 +1,5 @@
 import { submitNumber, verifyOtp } from "../../utils/auth.js"
-import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials } from "../../utils/shared.js"
+import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials, showPanelLinks } from "../../utils/shared.js"
 import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, saveInLocalStorage, showModal } from "../../utils/utils.js"
 
 const loadingContainer = document.querySelector('#loading-container')
@@ -167,6 +167,7 @@ const addCitiesToModal = async (cities) => {
 
 window.addEventListener("load", () => {
      getAndShowSocials()
+     showPanelLinks()
      getAndShowHeaderCityLocation()
 
      loadingContainer ? loadingContainer.style.display = 'none' : null

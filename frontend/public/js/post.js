@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 
           const isUserLogin = await isLogin()
           const token = getToken()
-          let noteID = postDetails.note._id
+          let noteID = postDetails.note?._id
 
           const postTitleElem = document.querySelector('#post-title')
           const postDescElem = document.querySelector('#post-description')
