@@ -7,24 +7,37 @@ window.addEventListener('load', async () => {
      const categoriesContainer = document.querySelector("#categories-container");
      const categoriesSection = document.querySelector("#categories");
      const descriptionCheckbox = document.querySelector("#description-checkbox");
-     const res = await axios({ url: `${baseUrl}/v1/category` })
-     const categories = await res.data.data.categories
 
      !isUserLogin ? location.href = './posts.html' : null
+
+     const res = await axios({ url: `${baseUrl}/v1/category` })
+     const categories = await res.data.data.categories
 
      showCategoies.addEventListener("click", () => {
           showCategoies.classList.remove("active");
           categoriesContainer.classList.add("active");
      });
 
-     const generateCategoriesTemplate = (categories) => {
+     const generateCategoriesTemplate = (categories, title, id) => {
           categoriesSection.innerHTML = "";
+
+          if (title) {
+               categoriesSection.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                      <div class="back" onclick="">
+                       <i class="bi bi-arrow-right"></i>
+                       <p>بازگشت به ${title}</p>
+                      </div>
+                    `
+               )
+          }
 
           categories.map((category) => {
                categoriesSection.insertAdjacentHTML(
                     "beforeend",
                     `
-                  <div class="box">
+                  <div class="box" onclick="categoryClickHandler('${category._id}')">
                       <div class="details">
                       <div>
                           <i class="bi bi-house-door"></i>
@@ -39,10 +52,30 @@ window.addEventListener('load', async () => {
                       </div>
                       <i class="bi bi-chevron-left"></i>
                   </div>
-              `
+                    `
                );
           });
      };
+
+     window.categoryClickHandler = async (catID) => {
+          console.log(catID);
+          const category = categories.find(cat => cat._id === catID)
+
+          if (category) {
+               generateCategoriesTemplate(category.subCategories, 'همه دسته ها')
+          } else {
+               const allSubCats = categories.flatMap(cat => cat.subCategories)
+
+               const subCategory = allSubCats.find(subCat => subCat._id === catID)
+               
+               if (subCategory) {
+                    generateCategoriesTemplate(subCategory.subCategories, subCategory.title, subCategory._id)
+               } else {
+                    location.href = `./new/registerPost.html?subCategoryID=${catID}`
+               }
+          }
+
+     }
 
      generateCategoriesTemplate(categories)
 
