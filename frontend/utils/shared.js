@@ -24,7 +24,7 @@ const getAndShowSocials = async () => {
      socials.forEach(social => {
           socialMediaContainer?.insertAdjacentHTML('beforeend', `
                     <a href="https://${social.link}" target="b_lank" class="sidebar__icon-link">
-                         <img src="./public/${social.icon.path}" width="20px" height="20px" alt="${social.name}" class="sidebare__icon" />
+                         <img src="../public/${social.icon.path}" width="20px" height="20px" alt="${social.name}" class="sidebare__icon" />
                     </a>
                `)
      });
@@ -179,6 +179,19 @@ const showPanelLinks = async () => {
      }
 }
 
+const getSupportArticles = async () => {
+     const res = await axios ({url: `${baseUrl}/v1/support/category-articles`})
+     return res.data.data.categories
+}
+
+const getArticleByID = async (id) => {
+     const res = await axios({url: `${baseUrl}/v1/support/articles/${id}`})
+     const response = await res.data.data.article
+     
+
+     return response
+}
+
 export {
      baseUrl,
      getAllCities,
@@ -189,4 +202,6 @@ export {
      getAllLocations,
      getPostDetails,
      showPanelLinks,
+     getSupportArticles,
+     getArticleByID,
 }

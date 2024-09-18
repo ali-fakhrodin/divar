@@ -82,7 +82,7 @@ const getMe = async () => {
      if (!token) {
           return false
      }
-     
+
      const res = await axios({
           url: `${baseUrl}/v1/auth/me`,
           headers: {
