@@ -25,7 +25,9 @@ window.addEventListener('load', async () => {
                categoriesSection.insertAdjacentHTML(
                     "beforeend",
                     `
-                      <div class="back" onclick="">
+                      <div class="back" onclick="${
+                         id ? `categoryClickHandler('${id}')` : `backToAllCategories()`
+                      }">
                        <i class="bi bi-arrow-right"></i>
                        <p>بازگشت به ${title}</p>
                       </div>
@@ -58,23 +60,26 @@ window.addEventListener('load', async () => {
      };
 
      window.categoryClickHandler = async (catID) => {
-          console.log(catID);
           const category = categories.find(cat => cat._id === catID)
 
           if (category) {
-               generateCategoriesTemplate(category.subCategories, 'همه دسته ها')
+               generateCategoriesTemplate(category.subCategories, 'همه دسته ها', null)
           } else {
                const allSubCats = categories.flatMap(cat => cat.subCategories)
-
                const subCategory = allSubCats.find(subCat => subCat._id === catID)
                
                if (subCategory) {
-                    generateCategoriesTemplate(subCategory.subCategories, subCategory.title, subCategory._id)
+                    const subCategoryParent = categories.find(cat => cat._id === subCategory.parent)
+                    
+                    generateCategoriesTemplate(subCategory.subCategories, subCategoryParent.title, subCategoryParent._id)
                } else {
                     location.href = `./new/registerPost.html?subCategoryID=${catID}`
                }
           }
+     }
 
+     window.backToAllCategories = async () => {
+          generateCategoriesTemplate(categories)
      }
 
      generateCategoriesTemplate(categories)
