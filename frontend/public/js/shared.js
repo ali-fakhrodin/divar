@@ -1,6 +1,6 @@
-import { submitNumber, verifyOtp } from "../../utils/auth.js"
-import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials, showPanelLinks } from "../../utils/shared.js"
-import { addParamToUrl, getFromLocalStorage, getURLParam, hideModal, isLogin, saveInLocalStorage, showModal } from "../../utils/utils.js"
+import { logOut, submitNumber, verifyOtp } from "../../utils/auth.js"
+import { getAllLocations, getAndShowHeaderCityLocation, getAndShowSocials } from "../../utils/shared.js"
+import { addParamToUrl, getFromLocalStorage, getMe, getURLParam, hideModal, isLogin, saveInLocalStorage, showModal } from "../../utils/utils.js"
 
 const loadingContainer = document.querySelector('#loading-container')
 const globalSearchInp = document.querySelector('#global_search_input')
@@ -167,12 +167,116 @@ const addCitiesToModal = async (cities) => {
      })
 }
 
+const showPanelLinks = async () => {
+     const dropDown = document.querySelector('.header_dropdown_menu')
+     const userLogin = await isLogin()
+     let isInUserPanel = false
+
+     if (location.href.includes('userPanel')) {
+          isInUserPanel = true
+     }
+
+     dropDown.innerHTML = "";
+
+     if (dropDown) {
+          if (userLogin) {
+               getMe().then((user) => {
+                    dropDown.insertAdjacentHTML(
+                         "beforeend",
+                         `
+                 <li class="header__left-dropdown-item header_dropdown-item_account">
+                   <a href="${isInUserPanel ? './posts.html' : '../pages/userPanel/posts.html'}" class="header__left-dropdown-link login_dropdown_link">
+                     <i class="header__left-dropdown-icon bi bi-box-arrow-in-left"></i>
+                     <div>
+                       <span>کاربر دیوار </span>
+                       <p>تلفن ${user.phone}</p>
+                     </div>
+                   </a>
+                 </li>
+                 <li class="header__left-dropdown-item">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel ? './verify.html' : '../pages/userPanel/verify.html'}">
+                     <i class="header__left-dropdown-icon bi bi-bookmark"></i>
+                     تایید هویت
+                   </a>
+                 </li>
+                 <li class="header__left-dropdown-item">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel ? './bookmarks.html' : '../pages/userPanel/bookmarks.html'}">
+                     <i class="header__left-dropdown-icon bi bi-bookmark"></i>
+                     نشان ها
+                   </a>
+                 </li>
+                 <li class="header__left-dropdown-item">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel ? './notes.html' : '../pages/userPanel/notes.html'}">
+                     <i class="header__left-dropdown-icon bi bi-journal"></i>
+                     یادداشت ها
+                   </a>
+                 </li>
+                 <li class="header__left-dropdown-item logout-link" id="logout_btn">
+                   <p class="header__left-dropdown-link" href="#">
+                     <i class="header__left-dropdown-icon bi bi-shop"></i>
+                     خروج
+                   </p>
+                 </li>
+                         `
+                    );
+               });
+          } else {
+               dropDown.insertAdjacentHTML(
+                    "beforeend",
+                    `
+               <li class="header__left-dropdown-item">
+                 <span id="login-btn" class="header__left-dropdown-link login_dropdown_link">
+                   <i class="header__left-dropdown-icon bi bi-box-arrow-in-left"></i>
+                   ورود
+                 </span>
+               </li>
+               <li class="header__left-dropdown-item">
+                 <div class="header__left-dropdown-link" href="#">
+                   <i class="header__left-dropdown-icon bi bi-bookmark"></i>
+                   نشان ها
+                 </div>
+               </li>
+               <li class="header__left-dropdown-item">
+                 <div class="header__left-dropdown-link" href="#">
+                   <i class="header__left-dropdown-icon bi bi-journal"></i>
+                   یادداشت ها
+                 </div>
+               </li>
+               <li class="header__left-dropdown-item">
+                 <div class="header__left-dropdown-link" href="#">
+                   <i class="header__left-dropdown-icon bi bi-clock-history"></i>
+                   بازدید های اخیر
+                 </div>
+               </li>
+           `
+               );
+
+               dropDown.addEventListener("click", () => {
+                    showModal("login-modal", "login-modal--active");
+               });
+          }
+     }
+}
+
+
+
 window.addEventListener("load", async () => {
      const isUserLogin = await isLogin()
 
      getAndShowSocials()
-     showPanelLinks()
      getAndShowHeaderCityLocation()
+     showPanelLinks().then(() => {
+
+          getMe().then(user => {
+               if (user) {
+                    const logOutBtn = document.querySelector('.logout-link')
+
+                    logOutBtn.addEventListener('click', () => {
+                         logOut()
+                    })
+               }
+          })
+     })
 
      loadingContainer ? loadingContainer.style.display = 'none' : null
 

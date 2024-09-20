@@ -1,7 +1,12 @@
+import { logOut } from '../../../utils/auth.js';
 import { getMe, isLogin } from '../../../utils/utils.js';
 
 const sidebarPhoneNumber = document.querySelector('#sidebar-phone-number')
+const sidebarLinkItem = document.querySelector('.sidebar__link-item')
 
+sidebarLinkItem.addEventListener('click', () => {
+     logOut()
+})
 
 window.addEventListener('load', async () => {
      const isUserLogin = await isLogin()
@@ -9,7 +14,6 @@ window.addEventListener('load', async () => {
      if (isUserLogin) {
           getMe().then(user => {
                sidebarPhoneNumber.innerHTML = user.phone
-               console.log(user);
           })
      } else {
           location.href = '../posts.html'

@@ -4,7 +4,6 @@ import { hideModal, saveInLocalStorage, showModal } from "./utils.js"
 const step1LoginFormError = document.querySelector('.step-1-login-form__error')
 const phoneNumberInput = document.querySelector('.phone_Number_input')
 const userNumberNotice = document.querySelector('.user_number_notice')
-// const requestTimerContainer = document.querySelector('.request_timer')
 const requestTimerCount = document.querySelector('.request_timer span')
 const requestNewCodeBtn = document.querySelector('.request_timer p')
 const loading = document.querySelector('#loading-container')
@@ -57,19 +56,19 @@ const verifyOtp = async () => {
      const otpRegEx = RegExp(/^\d{4}$/)
      const userOtp = otpInput.value
      const isValidOtp = otpRegEx.test(userOtp)
-     
+
      if (isValidOtp) {
           loading.classList.remove('active-login-loader')
           step2LoginFormError.innerHTML = ''
-          const res = await axios ({
+          const res = await axios({
                url: `${baseUrl}/v1/auth/verify`,
                method: 'post',
                headers: {
                     'Content-Type': 'application/json'
                },
-               data: JSON.stringify({phone: phoneNumberInput.value, otp: userOtp})
+               data: JSON.stringify({ phone: phoneNumberInput.value, otp: userOtp })
           })
-          
+
           if (res.status === 200 || res.status === 201) {
                const response = await res.data.data
                saveInLocalStorage('divar', response.token)
@@ -92,7 +91,23 @@ const verifyOtp = async () => {
      }
 }
 
+const logOut = () => {
+     Swal.fire({
+          title: 'آیا از خروج اطمینان داری؟',
+          showCancelButton: true,
+          cancelButtonText: 'لغو',
+          confirmButtonText: 'بله',
+          icon: 'warning',
+     }).then(result => {
+          if (result.isConfirmed) {
+               localStorage.removeItem('divar')
+               location.href = '../posts.html'
+          }
+     })
+}
+
 export {
      submitNumber,
      verifyOtp,
+     logOut,
 }

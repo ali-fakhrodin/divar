@@ -1,6 +1,9 @@
+// import { logOut } from "./auth.js"
 import { getFromLocalStorage, getMe, getToken, getURLParam, isLogin, saveInLocalStorage, showModal } from "./utils.js"
 
 const baseUrl = "https://divarapi.liara.run"
+
+// window.logOut = logOut()
 
 const getAllCities = async () => {
      const res = await axios({ url: `${baseUrl}/v1/location` })
@@ -93,97 +96,6 @@ const getPostDetails = async () => {
      return response
 }
 
-const showPanelLinks = async () => {
-     const dropDown = document.querySelector('.header_dropdown_menu')
-     const userLogin = await isLogin()
-     let isInUserPanel = false
-     
-     if (location.href.includes('userPanel')) {
-          isInUserPanel = true
-     }
-
-     dropDown.innerHTML = "";
-
-     if (dropDown) {
-          if (userLogin) {
-               getMe().then((user) => {
-                    dropDown.insertAdjacentHTML(
-                         "beforeend",
-                         `
-                 <li class="header__left-dropdown-item header_dropdown-item_account">
-                   <a href="${isInUserPanel?'./posts.html':'../pages/userPanel/posts.html'}" class="header__left-dropdown-link login_dropdown_link">
-                     <i class="header__left-dropdown-icon bi bi-box-arrow-in-left"></i>
-                     <div>
-                       <span>کاربر دیوار </span>
-                       <p>تلفن ${user.phone}</p>
-                     </div>
-                   </a>
-                 </li>
-                 <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./verify.html':'../pages/userPanel/verify.html'}">
-                     <i class="header__left-dropdown-icon bi bi-bookmark"></i>
-                     تایید هویت
-                   </a>
-                 </li>
-                 <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./bookmarks.html':'../pages/userPanel/bookmarks.html'}">
-                     <i class="header__left-dropdown-icon bi bi-bookmark"></i>
-                     نشان ها
-                   </a>
-                 </li>
-                 <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./notes.html':'../pages/userPanel/notes.html'}">
-                     <i class="header__left-dropdown-icon bi bi-journal"></i>
-                     یادداشت ها
-                   </a>
-                 </li>
-                 <li class="header__left-dropdown-item logout-link" id="login_btn">
-                   <p class="header__left-dropdown-link" href="#">
-                     <i class="header__left-dropdown-icon bi bi-shop"></i>
-                     خروج
-                   </p>
-                 </li>
-                         `
-                    );
-               });
-          } else {
-               dropDown.insertAdjacentHTML(
-                    "beforeend",
-                    `
-               <li class="header__left-dropdown-item">
-                 <span id="login-btn" class="header__left-dropdown-link login_dropdown_link">
-                   <i class="header__left-dropdown-icon bi bi-box-arrow-in-left"></i>
-                   ورود
-                 </span>
-               </li>
-               <li class="header__left-dropdown-item">
-                 <div class="header__left-dropdown-link" href="#">
-                   <i class="header__left-dropdown-icon bi bi-bookmark"></i>
-                   نشان ها
-                 </div>
-               </li>
-               <li class="header__left-dropdown-item">
-                 <div class="header__left-dropdown-link" href="#">
-                   <i class="header__left-dropdown-icon bi bi-journal"></i>
-                   یادداشت ها
-                 </div>
-               </li>
-               <li class="header__left-dropdown-item">
-                 <div class="header__left-dropdown-link" href="#">
-                   <i class="header__left-dropdown-icon bi bi-clock-history"></i>
-                   بازدید های اخیر
-                 </div>
-               </li>
-           `
-               );
-
-               dropDown.addEventListener("click", () => {
-                    showModal("login-modal", "login-modal--active");
-               });
-          }
-     }     
-}
-
 const getSupportArticles = async () => {
      const res = await axios ({url: `${baseUrl}/v1/support/category-articles`})
      return res.data.data.categories
@@ -212,7 +124,6 @@ export {
      getAndShowHeaderCityLocation,
      getAllLocations,
      getPostDetails,
-     showPanelLinks,
      getSupportArticles,
      getArticleByID,
      getArticles,
