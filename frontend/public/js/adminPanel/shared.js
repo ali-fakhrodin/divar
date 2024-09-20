@@ -11,16 +11,16 @@ window.addEventListener("load", async () => {
   if (isUserLogin) {
     getMe().then((user) => {
       if (user.role !== "ADMIN") {
-        location.href = "/pages/posts.html";
+        // location.href = "/pages/posts.html";
       }
+      console.log(user);
 
       phoneNumber.innerHTML = user.phone;
-
       loading.style.display = "none";
 
       logoutBtn.addEventListener("click", logOut);
     });
   } else {
-    location.href = "../../pages/posts.html";
+    // location.href = "../../pages/posts.html";
   }
 });
