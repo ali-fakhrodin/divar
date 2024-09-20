@@ -96,6 +96,11 @@ const getPostDetails = async () => {
 const showPanelLinks = async () => {
      const dropDown = document.querySelector('.header_dropdown_menu')
      const userLogin = await isLogin()
+     let isInUserPanel = false
+     
+     if (location.href.includes('userPanel')) {
+          isInUserPanel = true
+     }
 
      dropDown.innerHTML = "";
 
@@ -106,7 +111,7 @@ const showPanelLinks = async () => {
                          "beforeend",
                          `
                  <li class="header__left-dropdown-item header_dropdown-item_account">
-                   <a href="../pages/userPanel/posts.html" class="header__left-dropdown-link login_dropdown_link">
+                   <a href="${isInUserPanel?'./posts.html':'../pages/userPanel/posts.html'}" class="header__left-dropdown-link login_dropdown_link">
                      <i class="header__left-dropdown-icon bi bi-box-arrow-in-left"></i>
                      <div>
                        <span>کاربر دیوار </span>
@@ -115,19 +120,19 @@ const showPanelLinks = async () => {
                    </a>
                  </li>
                  <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="../pages/userPanel/verify.html">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./verify.html':'../pages/userPanel/verify.html'}">
                      <i class="header__left-dropdown-icon bi bi-bookmark"></i>
                      تایید هویت
                    </a>
                  </li>
                  <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="../pages/userPanel/bookmarks.html">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./bookmarks.html':'../pages/userPanel/bookmarks.html'}">
                      <i class="header__left-dropdown-icon bi bi-bookmark"></i>
                      نشان ها
                    </a>
                  </li>
                  <li class="header__left-dropdown-item">
-                   <a class="header__left-dropdown-link" href="../pages/userPanel/notes.html">
+                   <a class="header__left-dropdown-link" href="${isInUserPanel?'./notes.html':'../pages/userPanel/notes.html'}">
                      <i class="header__left-dropdown-icon bi bi-journal"></i>
                      یادداشت ها
                    </a>
@@ -176,7 +181,7 @@ const showPanelLinks = async () => {
                     showModal("login-modal", "login-modal--active");
                });
           }
-     }
+     }     
 }
 
 const getSupportArticles = async () => {
