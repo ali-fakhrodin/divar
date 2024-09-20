@@ -176,7 +176,7 @@ const showPanelLinks = async () => {
           isInUserPanel = true
      }
 
-     dropDown.innerHTML = "";
+     dropDown ? dropDown.innerHTML = "" : null
 
      if (dropDown) {
           if (userLogin) {
@@ -258,15 +258,12 @@ const showPanelLinks = async () => {
      }
 }
 
-
-
 window.addEventListener("load", async () => {
      const isUserLogin = await isLogin()
 
      getAndShowSocials()
      getAndShowHeaderCityLocation()
      showPanelLinks().then(() => {
-
           getMe().then(user => {
                if (user) {
                     const logOutBtn = document.querySelector('.logout-link')
