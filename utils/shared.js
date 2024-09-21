@@ -86,12 +86,9 @@ const getPostDetails = async () => {
           }
      })
 
-
      const response = await res.data.data
 
      console.log(response);
-
-
 
      return response
 }

@@ -101,7 +101,7 @@ const logOut = () => {
      }).then(result => {
           if (result.isConfirmed) {
                localStorage.removeItem('divar')
-               location.href = '/frontend/pages/posts.html'
+               location.href = '/pages/posts.html'
           }
      })
 }
